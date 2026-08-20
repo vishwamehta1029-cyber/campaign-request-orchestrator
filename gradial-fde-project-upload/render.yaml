@@ -1,0 +1,29 @@
+# Render Blueprint — lets anyone (including you) spin up the backend with
+# one click: https://render.com/deploy?repo=<this-repo-url>
+# Secrets are marked sync:false so Render prompts for them in its own
+# dashboard during setup rather than storing them in this file / git.
+services:
+  - type: web
+    name: campaign-orchestrator-api
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-4o-mini
+      - key: NOTION_API_KEY
+        sync: false
+      - key: NOTION_PARENT_PAGE_ID
+        sync: false
+      - key: NOTION_TASKS_DATABASE_ID
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
+      - key: MAX_REQUESTS_PER_IP_PER_HOUR
+        value: "5"
+      - key: MAX_LIVE_REQUESTS_PER_DAY
+        value: "40"
